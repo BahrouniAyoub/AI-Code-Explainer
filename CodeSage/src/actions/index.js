@@ -5,8 +5,8 @@ export async function explainCode(prevState, formData) {
     const language = formData.get("language");
 
     try {
-        const res = await fetcch(process.env.VITE_API_BASE_URL + "/explain", {
-            mthod: "POST",
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/explain`, {
+            method: "POST",
             headers: {
                 "Content-type": "application/json"
             },

@@ -1,12 +1,14 @@
 import React, { useActionState } from 'react'
-import explainCodeAction from '../../actions/explainCodeAction'
+import { explainCode } from '../../actions'
+import CodeExplaination from '../CodeExplaination'
+import Error from '../Error'
 
 const CodeExplaineForm = () => {
 
-    const [formState, formActions, isPending] = useActionState(expalainCodeAction, null)
+    const [formState, formAction, isPending] = useActionState(explainCode, null)
     return (
         <div className="w-full max-w-4xl bg-white p-6 rounded-2xl shadow-lg">
-            <form>
+            <form action={formAction}>
                 <label className="block mb-2 font-semibold">Language:</label>
                 <select
                     name="language"
@@ -27,11 +29,24 @@ const CodeExplaineForm = () => {
 
                 <button
                     type="submit"
-                    className="mt-4 px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+                    disabled={isPending}
+                    className="mt-4 px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50" 
                 >
-                    Explain Code
+                    {isPending ? "Explaining..." : "Explain Code"}
                 </button>
             </form>
+            {isPending ? (
+                <p className="bg-gray-300 my-3 w-64 p-2 rounded-sm">Thinking...</p>
+            ) : formState?.success ? (
+                <CodeExplaination explanation={formState?.data.explanation} />
+            ) :
+                (
+                    formState?.success === false && (
+                        <Error error={formState?.error} />
+                    )
+                )
+
+            }
         </div>
     )
 }
